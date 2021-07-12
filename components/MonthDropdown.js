@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropDownPicker from "react-native-custom-dropdown";
-import Icon from 'react-native-vector-icons/Feather';
 import { months } from '../data/Months';
 const MonthDropdown = () => {
     const currentMo = new Date().getMonth()
