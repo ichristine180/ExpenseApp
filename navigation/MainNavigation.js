@@ -16,10 +16,10 @@ function MainStack() {
                     },
                     headerTintColor: 'white',
                     headerTitleStyle: {
-                        fontSize: 15,
+                        fontSize: 10,
                         fontWeight: 'bold'
                     },
-                    title: ' Tracking Monthly Expenses'
+                    title: 'Tracking Monthly Expenses'+ '    '+ new Date().getFullYear()
                 }
             }>
                 <Stack.Screen name='Home' component={Home} />
