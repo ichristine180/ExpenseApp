@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { StyleSheet, Text} from 'react-native';
 import DropDownPicker from "react-native-custom-dropdown";
 import { months } from '../data/Months';
-const MonthDropdown = () => {
+const MonthDropdown = (props) => {
     const currentMo = new Date().getMonth()
     const [month, setMonth] = useState(months[currentMo].value)
     
@@ -14,10 +14,14 @@ const MonthDropdown = () => {
             containerStyle={{ height: 40, marginHorizontal: 15, marginVertical: 15,marginBottom:155 }}
             style={{ backgroundColor: '#fafafa' }}
             itemStyle={{
-                justifyContent: 'flex-start'
+                justifyContent: 'flex-start',
+                
             }}
             dropDownStyle={{ backgroundColor: '#fafafa' }}
-            onChangeItem={item => setMonth(item.value)
+            onChangeItem={item => {
+                setMonth(item.value);
+                props.onChange(item.value)
+            }
             }
 
             searchable={true}
@@ -32,7 +36,6 @@ const MonthDropdown = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         paddingTop: 40,
         alignItems: "center"
     }
