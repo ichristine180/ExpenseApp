@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { color } from '../constant/color';
-import { useDispatch } from 'react-redux';
-import { addExpenses } from '../store/actions/expenses';
+
 const ExpenseForm = props => {
-    const dispatch = useDispatch()
-    const [title, setTitle] = useState('');
-    const [amount, setAmount] = useState('');
-    const [description, setDescription] = useState('')
+    const editData = props.updatedExpense;
+    let editMode = false;
+    if (editData !== undefined) {
+        editMode = true;
+    }
+   
+    const [titleErr, setTitleError] = useState(editMode ? false : true);
+    const [amountErr, setAmountErr] = useState(editMode ? false : true);
+    const [discriptionErr, setDiscriptionErr] = useState(editMode ? false : true)
+    const [title, setTitle] = useState(editMode ? editData.title : '');
+    const [amount, setAmount] = useState(editMode ? editData.amount.toString() : '');
+    const [discription, setDiscription] = useState(editMode ? editData.discription : '')
     const titleHandler = (titleText) => {
         setTitle(titleText)
     }
@@ -16,36 +23,74 @@ const ExpenseForm = props => {
         setAmount(amountText)
     }
     const descriptionHandler = (descriptionText) => {
-        setDescription(descriptionText)
+        setDiscription(descriptionText)
     }
 
     const submitHandler = () => {
+        if (titleErr || amountErr || discriptionErr) {
+            Alert.alert('Error', 'all field are required. check error on the form')
+            return;
+        }
         let date = new Date();
-        let id = date.getTime().toString()
         const newExpense = {
             title: title,
             amount: +amount,
-            id: id,
             date: date,
-            description: description
+            discription: discription
         }
-       props.onSubimitHandler(newExpense)
+        if (editMode) {
+            props.onUpdateHandler({
+                title: title,
+                amount: +amount,
+                discription: discription,
+                id: editData.id
+            })
+        }
+        else props.onSubimitHandler(newExpense)
 
     }
     return <View style={styles.formContainer}>
-        <TextInput placeholder="Type Title Of expense" style={styles.input} value={title} onChangeText={titleHandler} />
+        <TextInput placeholder="Type Title Of expense"
+            testID="title"
+            style={{ ...styles.input, borderColor: titleErr ? 'red' : '#192734' }} value={title}
+            onChangeText={titleHandler}
+            onBlur={() => {
+                if (title.length == 0) {
+                    setTitleError(true);
+                } else setTitleError(false);
+            }
+            }
+        />{titleErr && <Text style={{ color: 'red' }}>Title is required</Text>}
         <TextInput placeholder="Type  amount.."
             blurOnSubmit
             keyboardType="number-pad"
-            style={styles.input} value={amount} onChangeText={amountHandler} />
+            style={{ ...styles.input, borderColor: amountErr ? 'red' : '#192734' }}
+            value={amount}
+            onChangeText={amountHandler}
+            onBlur={() => {
+                if (amount.length == 0 || amount == 0) {
+                    setAmountErr(true);
+                } else setAmountErr(false);
+            }
+            }
+        />{amountErr && <Text style={{ color: 'red' }}>Amount is required</Text>}
         <TextInput
-            style={{ ...styles.input, height: 100, alignItems: 'flex-start' }} value={description}
-            onChangeText={descriptionHandler} />
+            style={{ ...styles.input, height: 50, alignItems: 'flex-start' }} value={discription}
+            onChangeText={descriptionHandler}
+            onBlur={() => {
+                if (discription.length == 0) {
+                    setDiscriptionErr(true);
+                } else setDiscriptionErr(false);
+            }
+            }
+        />{discriptionErr && <Text style={{ color: 'red' }}>Amount is required</Text>}
         <TouchableOpacity
-            style={{overflow:'hidden'}}
-            onPress={submitHandler}>
+            style={{ overflow: 'hidden' }}
+            onPress={submitHandler}
+        >
             <View style={styles.buttonContainer}>
-                <Text style={styles.buttton}>Save</Text>
+                {!editMode && <Text style={styles.buttton}>Save</Text>}
+                {editMode && <Text style={styles.buttton}>Update</Text>}
             </View>
         </TouchableOpacity>
     </View>

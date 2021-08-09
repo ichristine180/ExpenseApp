@@ -2,10 +2,12 @@ import AppLoading from 'expo-app-loading';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MyDrawer from './navigation/MainNavigation'
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware} from 'redux';
 import { Provider } from 'react-redux';
 import expenseReducer from './store/reducers/expenses';
+import authenticate from './store/reducers/auth';
 import * as Font from 'expo-font'
+import reduxThunk from 'redux-thunk'
 
 
 const fetchFonts = () => {
@@ -25,8 +27,8 @@ export default function App() {
       />
     );
   }
-  const rootReducer = combineReducers({ expenses: expenseReducer })
-  const store = createStore(rootReducer)
+  const rootReducer = combineReducers({ expenses: expenseReducer, auth: authenticate })
+  const store = createStore(rootReducer,applyMiddleware(reduxThunk))
   return (
     <Provider store={store}>
       <MyDrawer />

@@ -2,13 +2,17 @@ import * as React from 'react';
 import { View, Text,StyleSheet } from 'react-native';
 import NumberFormat from 'react-number-format';
 import { color } from '../constant/color';
+import { useSelector } from 'react-redux';
 const SummaryScreen = () => {
+    const totalExpense = useSelector((state) => {
+        return state.expenses.expenses.length
+    })
     return (
         <View style={{ margin: 20,marginVertical:90 }}>
             <View style={styles.card}>
                 <View style={styles.container}>
                     <Text style={{ ...styles.title, fontSize: 14 }}>Tot Expenses:</Text>
-                    <Text style={{...styles.subTitle,fontSize:20}}>49</Text>
+                    <Text style={{ ...styles.subTitle, fontSize: 20 }}>{totalExpense}</Text>
                 </View>
 
                 <View style={styles.container}>
