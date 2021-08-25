@@ -225,7 +225,7 @@ function authStack() {
             }
         }>
 
-            <Stack.Screen name='Authenticate' component={Authenticate} />
+            <Stack.Screen name='Authenticate' component={Authenticate} options={{ headerShown: false }}/>
 
         </Stack.Navigator>
     )

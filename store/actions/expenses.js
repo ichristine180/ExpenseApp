@@ -40,9 +40,10 @@ export function listExpense() {
 }
 
 export function addExpenses(newExpense) {
-    return async dispatch => {
+    return async(dispatch, getState) => {
+        const token = getState().auth.token;
         try {
-            const response = await fetch('https://myexepense-default-rtdb.firebaseio.com/expenses.json', {
+            const response = await fetch(`https://myexepense-default-rtdb.firebaseio.com/expenses.json?auth=${token}`, {
                 method: 'POST',
                 headers: {
                     'content-Type': 'application/json'
